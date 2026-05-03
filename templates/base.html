@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}PawPulse{% endblock %}</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <nav class="container-fluid">
+    <ul>
+      <li><strong><a href="{{ url_for('index') }}" class="brand">🐾 PawPulse</a></strong></li>
+    </ul>
+    <ul>
+      <li><a href="{{ url_for('map_view') }}">Map</a></li>
+      <li><a href="{{ url_for('register_dog') }}">Register Dog</a></li>
+      <li><a href="{{ url_for('emergencies_list') }}">Emergencies</a></li>
+      <li><a href="{{ url_for('report_emergency') }}" role="button" class="emergency-btn">Report Emergency</a></li>
+    </ul>
+  </nav>
+
+  <main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="container-fluid">
+    <p>PawPulse — giving every stray dog an identity.</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}PawPulse — Home{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <h1>Every stray dog deserves an identity.</h1>
+  <p>PawPulse connects feeders, NGOs, donors, and citizens to care for street dogs across Hyderabad.</p>
+  <div class="hero-actions">
+    <a href="{{ url_for('map_view') }}" role="button">View Map</a>
+    <a href="{{ url_for('register_dog') }}" role="button" class="outline">Register a Dog</a>
+  </div>
+</section>
+
+<section class="stats-row">
+  <article class="stat-card">
+    <h2>{{ total_dogs }}</h2>
+    <p>Dogs registered</p>
+  </article>
+  <article class="stat-card urgent">
+    <h2>{{ open_emergencies }}</h2>
+    <p>Open emergencies</p>
+  </article>
+</section>
+
+{% if recent_dogs %}
+<section>
+  <h2>Recently registered</h2>
+  <div class="dog-grid">
+    {% for dog in recent_dogs %}
+    <a href="{{ url_for('dog_profile', dog_id=dog.id) }}" class="dog-card">
+      {% if dog.photo_url %}
+        <img src="{{ dog.photo_url }}" alt="{{ dog.name }}" class="dog-thumb"/>
+      {% else %}
+        <div class="dog-thumb placeholder">🐶</div>
+      {% endif %}
+      <div class="dog-card-info">
+        <strong>{{ dog.name }}</strong>
+        <span>{{ dog.area or 'Unknown area' }}</span>
+        {% if dog.is_vaccinated %}
+          <span class="badge vaccinated">Vaccinated</span>
+        {% else %}
+          <span class="badge unvaccinated">Not vaccinated</span>
+        {% endif %}
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endblock %}

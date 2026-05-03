@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}{{ dog.name }} — PawPulse{% endblock %}
+
+{% block content %}
+<div class="profile-layout">
+
+  <div class="profile-left">
+    {% if dog.photo_url %}
+      <img src="{{ dog.photo_url }}" alt="{{ dog.name }}" class="profile-photo"/>
+    {% else %}
+      <div class="profile-photo placeholder-large">🐶</div>
+    {% endif %}
+
+    {% if dog.qr_code_url %}
+    <div class="qr-section">
+      <p>Scan to share this profile</p>
+      <img src="{{ dog.qr_code_url }}" alt="QR code for {{ dog.name }}" class="qr-img"/>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="profile-right">
+    <h1>{{ dog.name }}</h1>
+
+    <table class="profile-table">
+      <tr><th>Breed</th><td>{{ dog.breed or '—' }}</td></tr>
+      <tr><th>Color</th><td>{{ dog.color or '—' }}</td></tr>
+      <tr><th>Area</th><td>{{ dog.area or '—' }}</td></tr>
+      <tr><th>Vaccinated</th>
+          <td>{% if dog.is_vaccinated %}Yes ✓{% else %}No{% endif %}</td></tr>
+      {% if dog.feeder %}
+      <tr><th>Fed by</th><td>{{ dog.feeder.name }} ({{ dog.feeder.area }})</td></tr>
+      {% endif %}
+      <tr><th>Registered</th><td>{{ dog.created_at.strftime('%d %b %Y') }}</td></tr>
+    </table>
+
+    {% if dog.medical_notes %}
+    <h3>Medical notes</h3>
+    <p>{{ dog.medical_notes }}</p>
+    {% endif %}
+
+    <h3>Emergency history</h3>
+    {% if emergencies %}
+      {% for e in emergencies %}
+      <article class="emergency-item status-{{ e.status }}">
+        <strong>{{ e.status | upper }}</strong> — {{ e.created_at.strftime('%d %b %Y') }}
+        <p>{{ e.description }}</p>
+        {% if e.location_text %}<small>📍 {{ e.location_text }}</small>{% endif %}
+      </article>
+      {% endfor %}
+    {% else %}
+      <p>No emergency reports for this dog.</p>
+    {% endif %}
+
+    <div class="profile-actions">
+      <a href="{{ url_for('report_emergency') }}?dog_id={{ dog.id }}" role="button" class="outline">
+        Report Emergency for {{ dog.name }}
+      </a>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
